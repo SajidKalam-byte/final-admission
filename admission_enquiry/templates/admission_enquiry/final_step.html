@@ -1,123 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Step</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        /* Academic Theme */
-        body {
-            font-family: Georgia, serif;
-            background-color: #f8f9fa;
-        }
+{% extends "base.html" %}
 
-        h1 {
-            color: #0056b3;
-            font-weight: bold;
-        }
+{% block title %}Final Step{% endblock title %}
 
-        .header-section {
-            background-color: #0056b3;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
+{% block page_name %}Final Step{% endblock page_name %}
 
-        .header-section i {
-            font-size: 2rem;
-            margin-right: 10px;
-        }
+{% block content %}
+{% load static %}
 
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
+<div class="container my-5 p-3 border rounded">
 
-        .card-title {
-            color: #0056b3;
-            font-weight: bold;
-        }
-
-        .btn-success, .btn-info {
-            margin: 10px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-        }
-
-        .btn-success:hover, .btn-info:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-        }
-    </style>
-</head>
-<body>
-<div class="container mt-5">
-    <!-- Header Section -->
-    <div class="header-section d-flex align-items-center justify-content-center">
-        <i class="bi bi-check-circle-fill"></i>
-        <div>
-            <h1>Admission Process Complete!</h1>
-            <p>Thank you for completing the admission process. Below are your details and options to download important documents.</p>
-        </div>
+<!-- Header Section -->
+<div class="header-section p-2 d-flex col-12 mx-auto align-items-center justify-content-center bg-primary text-light rounded">
+    <div>
+        <h1><i class="bi bi-check-circle-fill"></i> Admission Process Complete!</h1>
+        <p>Thank you for completing the admission process. Below are your details and options to download important documents.</p>
     </div>
+</div>
 
-    <!-- Student Details -->
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Student Details</h5>
-                    <p class="card-text">
-                        <strong>Name:</strong> {{ admission_form.full_name }}<br>
-                        <strong>Email:</strong> {{ admission_form.email }}<br>
-                        <strong>Phone:</strong> {{ admission_form.phone }}<br>
-                        <strong>Course:</strong> {{ admission_form.course }}<br>
-                        <strong>Fee Paid:</strong> Rs. {{ admission_form.course.fee }}
-                    </p>
-                </div>
+<!-- Student Details -->
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Student Details</h5>
+                <p class="card-text">
+                    <strong>Name:</strong> {{ admission_form.name }}<br>
+                    <strong>Phone:</strong> {{ admission_form.phone_number }}<br>
+                    <strong>Course:</strong> {{ admission_form.course_preferred.name}}<br>
+                    <strong>Last Qualification:</strong> {{ admission_form.last_qualification }}<br>
+                    <strong>Aadhar Number:</strong> {{ admission_form.aadhar_number }}<br>
+                </p>
+
+               <!-- Display Passport Photo -->
+{% if admission_form.passport_photo %}
+<p><strong>Passport Photo:</strong></p>
+<img src="{{ admission_form.passport_photo.url }}" alt="Passport Photo" class="img-thumbnail" width="150">
+{% else %}
+<p>No passport photo uploaded.</p>
+{% endif %}
+
+<!-- Display Signature -->
+{% if admission_form.signature %}
+<p><strong>Signature:</strong></p>
+<img src="{{ admission_form.signature.url }}" alt="Signature" class="img-thumbnail" width="150">
+{% else %}
+<p>No signature uploaded.</p>
+{% endif %}
+
             </div>
-        </div>
-    </div>
-
-    <!-- Payment Confirmation -->
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Payment Confirmation</h5>
-                    <p class="card-text">
-                        <strong>Transaction ID:</strong> {{ payment.transaction_id }}<br>
-                        <strong>Payment Method:</strong> {{ payment.get_payment_method_display }}<br>
-                        <strong>Payment Date:</strong> {{ payment.payment_date }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Download Options -->
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-8 text-center">
-            <a href="{% url 'download_letter' %}?admission_form_id={{ admission_form.id }}" class="btn btn-success">
-                <i class="bi bi-download me-2"></i>Download Allotment Letter
-            </a>            
-            <a href="{% url 'download_invoice' admission_form.id %}" class="btn btn-info">
-                <i class="bi bi-download me-2"></i>Download Invoice
-            </a>
-            
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS (Optional) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<!-- Payment Confirmation -->
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Payment Confirmation</h5>
+                <p class="card-text">
+                    <strong>Payee Name:</strong> {{ payment.payee_name }}</strong><br>
+                    <strong>Amount Paid:</strong> Rs. {{ payment.amount }}<br>
+                    <strong>Transaction ID:</strong> {{ payment.transaction_id }}<br>
+                    <strong>Payment Method:</strong> {{ payment.payment_mode }}<br>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download Options -->
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 text-center">
+        <a href="{% url 'download_letter' %}?admission_form_id={{ admission_form.id }}" class="btn btn-success">
+            <i class="bi bi-download me-2"></i>Download Allotment Letter
+        </a>            
+        <a href="{% url 'download_invoice' admission_form.id %}" class="btn btn-info">
+            <i class="bi bi-download me-2"></i>Download Invoice
+        </a>
+    </div>
+</div>
+
+</div>
+
+{% endblock content %}

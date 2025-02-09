@@ -9,16 +9,35 @@
     <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.png' %}">
+    <!-- font awesome icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Custom Academic Theme CSS -->
     <style>
-        body {
-            font-family: 'Georgia', serif;
-            background-color: #f8f9fa;
+        /* Ensure full height for the page */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Wrapper ensures main content expands */
+        .wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar styling */
         .navbar {
             background-color: #0056b3 !important;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 999;
         }
 
         .navbar-brand, .nav-link {
@@ -26,28 +45,24 @@
         }
 
         .navbar-brand:hover, .nav-link:hover {
-            color: #f8f9fa !important;
             opacity: 0.8;
         }
 
-        .navbar-toggler {
-            border-color: white !important;
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
-        }
-
+        /* Main content takes remaining space */
         .container {
+            flex-grow: 1;
             max-width: 1200px;
         }
 
+        /* Footer stays at the bottom */
         .footer {
             background-color: #0056b3;
             color: white;
             padding: 20px 0;
             text-align: center;
-            margin-top: 40px;
+            width: 100%;
+            margin-top: auto; /* Pushes footer to the bottom */
+            z-index: 999;
         }
 
         .footer a {
@@ -60,12 +75,12 @@
         }
     </style>
 </head>
-<body>
+<body style="height: 100%; display: flex; flex-direction: column; margin: 0;">
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Admission Enquiry</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            <a class="navbar-brand" href="/"><i class="bi bi-mortarboard-fill"></i> {% block page_name %}College{% endblock page_name %} </a>
+            <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -80,12 +95,14 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container mt-4">
+    <div class="container my-5 col-8" style="flex-grow: 1;">
         {% block content %}{% endblock %}
     </div>
 
+    {% comment %} style="position: relative; bottom: 0; width: 100%;" {% endcomment %}
+
     <!-- Footer -->
-    <div class="footer">
+    <div class="footer" >
         <p>&copy; 2025 Admission Enquiry System. All rights reserved.</p>
         <p><a href="/privacy-policy/">Privacy Policy</a> | <a href="/terms-of-service/">Terms of Service</a></p>
     </div>

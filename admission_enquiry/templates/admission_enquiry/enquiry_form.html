@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
+{% block title %}Admission Enquiry{% endblock title %}
+
+{% block page_name %}Admission Enquiry{% endblock page_name %}
+
 {% block content %}
-<div class="container p-3">
+<div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="academic-card">
@@ -55,10 +59,11 @@
                     <div class="form-floating mb-3">
                         <select class="form-select" id="id_course_preferred_1" name="course_preferred_1" required>
                             <option value="" disabled selected>Select Preferred Course 1</option>
-                            <option value="Mathematics">Mathematics</option>
-                            <option value="Physics">Physics</option>
-                            <option value="Arts">Arts</option>
-                            <option value="Computer Science">Computer Science</option>
+                            <option value="" disabled selected>Select Preferred Course 2 (Optional)</option>
+                            <option value="Mathematics">MCA</option>
+                            <option value="Physics">BCA</option>
+                            <option value="Arts">BBA</option>
+                            <option value="Computer Science">MBA</option>
                         </select>
                         <label for="id_course_preferred_1"><i class="bi bi-book-fill me-2"></i>Preferred Course 1</label>
                         {{ form.course_preferred_1.errors }}
@@ -68,10 +73,10 @@
                     <div class="form-floating mb-3">
                         <select class="form-select" id="id_course_preferred_2" name="course_preferred_2">
                             <option value="" disabled selected>Select Preferred Course 2 (Optional)</option>
-                            <option value="Mathematics">Mathematics</option>
-                            <option value="Physics">Physics</option>
-                            <option value="Arts">Arts</option>
-                            <option value="Computer Science">Computer Science</option>
+                            <option value="Mathematics">MCA</option>
+                            <option value="Physics">BCA</option>
+                            <option value="Arts">BBA</option>
+                            <option value="Computer Science">MBA</option>
                         </select>
                         <label for="id_course_preferred_2"><i class="bi bi-book me-2"></i>Preferred Course 2</label>
                         {{ form.course_preferred_2.errors }}
@@ -81,10 +86,10 @@
                     <div class="form-floating mb-3">
                         <select class="form-select" id="id_course_preferred_3" name="course_preferred_3">
                             <option value="" disabled selected>Select Preferred Course 3 (Optional)</option>
-                            <option value="Mathematics">Mathematics</option>
-                            <option value="Physics">Physics</option>
-                            <option value="Arts">Arts</option>
-                            <option value="Computer Science">Computer Science</option>
+                            <option value="Mathematics">MCA</option>
+                            <option value="Physics">BCA</option>
+                            <option value="Arts">BBA</option>
+                            <option value="Computer Science">MBA</option>
                         </select>
                         <label for="id_course_preferred_3"><i class="bi bi-book me-2"></i>Preferred Course 3</label>
                         {{ form.course_preferred_3.errors }}
@@ -105,7 +110,7 @@
 
                     <!-- Submit Button -->
                     <div class="d-grid mt-4">
-                        <button class="btn academic-btn" type="submit">
+                        <button class="btn academic-btn col-6 mx-auto bg-primary text-light" type="submit">
                             <i class="bi bi-send-fill me-2"></i>Submit Enquiry
                         </button>
                     </div>

@@ -1,83 +1,52 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assigned Counsellor</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS for academic theme -->
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Georgia', serif;
-        }
-        .academic-header {
-            background-color: #0056b3;
-            color: white;
-            padding: 20px;
-            border-radius: 10px 10px 0 0;
-        }
-        .academic-card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .academic-btn {
-            background-color: #0056b3;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.1rem;
-        }
-        .academic-btn:hover {
-            background-color: #004494;
-        }
-    </style>
-</head>
-<body>
-    {% block content %}
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-        <div class="text-center p-5 academic-card">
-            <div class="academic-header mb-4">
-                <h2>
-                    <i class="bi bi-check-circle-fill me-2"></i>Thank you for your enquiry!
-                </h2>
-            </div>
-            {% if counsellor %}
-                <div class="card mb-4 academic-card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="bi bi-person-fill me-2"></i>Counsellor Details
-                        </h5>
-                        <p class="card-text">
-                            <strong>Name:</strong> {{ counsellor.name }}
-                            <i class="bi bi-person-badge ms-2"></i>
-                        </p>
-                        {% if counsellor.email %}
-                            <p class="card-text">
-                                <strong>Email:</strong> {{ counsellor.email }}
-                                <i class="bi bi-envelope-fill ms-2"></i>
-                            </p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% else %}
-                <p class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Our team will review your enquiry and contact you soon.
-                </p>
-            {% endif %}
-            <a href="{% url 'admission_form' %}" class="btn academic-btn btn-lg text-white">
-                <i class="bi bi-arrow-right-circle me-2"></i>Proceed to Admission Form
-            </a>
+{% block title %}Assigned Counsellor{% endblock title %}
+
+{% block page_name %}Counsellor Assignment{% endblock page_name %}
+
+{% block content %}
+
+<div class="container justify-content-center align-items-center">
+    <div class="text-center p-5 academic-card">
+        <div class="container academic-header p-4 rounded mb-4 bg-primary bg-gradient text-light">
+            <h2>
+                <i class="bi bi-check-circle-fill me-2"></i>Thank you for your enquiry!
+            </h2>
         </div>
+        {% if counsellor %}
+            <div class="card mb-4 academic-card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-person-fill me-2"></i>Counsellor Details
+                    </h5>
+                    <p class="card-text">
+                        <strong>Name:</strong> {{ counsellor.name }}
+                        <i class="bi bi-person-badge ms-2"></i>
+                    </p>
+                    {% if counsellor.email %}
+                        <p class="card-text">
+                            <strong>Email:</strong> {{ counsellor.email }}
+                            <i class="bi bi-envelope-fill ms-2"></i>
+                        </p>
+                    {% endif %}
+                    {% if counsellor.contact_number %}
+                        <p class="card-text">
+                            <strong>Contact Number:</strong> {{ counsellor.contact_number }}
+                            <i class="bi bi-telephone-fill ms-2"></i>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                Our team will review your enquiry and contact you soon.
+            </p>
+        {% endif %}
+        <a href="{% url 'admission_form' %}" class="btn academic-btn btn-lg bg-primary text-white">
+            <i class="bi bi-arrow-right-circle me-2"></i>Proceed to Admission Form
+        </a>
     </div>
-    {% endblock %}
+</div>
 
-    <!-- Bootstrap JS (optional, but recommended for full functionality) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% endblock content %}

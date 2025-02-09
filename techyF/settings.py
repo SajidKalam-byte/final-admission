@@ -152,3 +152,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
