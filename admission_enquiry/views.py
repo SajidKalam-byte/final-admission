@@ -22,8 +22,46 @@ from reportlab.lib.pagesizes import A4
 from django.conf import settings
 import os
 from reportlab.lib.utils import ImageReader
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from .models import AdmissionForm, Payment
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.utils import ImageReader
+from django.conf import settings
+import os
 
-def download_invoice(request, admission_form_id):  # Accept admission_form_id as an argument
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from .models import AdmissionForm, Payment
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.utils import ImageReader
+from django.conf import settings
+import os
+
+def draw_header(p, width, height, title):
+    logo_path = os.path.join(settings.MEDIA_ROOT, "logo.png")  # Change to your logo path
+    if os.path.exists(logo_path):
+        p.drawImage(logo_path, 50, height - 60, width=80, height=80, mask='auto')
+    
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(150, height - 50, "XYZ Institute of Technology")
+    p.setFont("Helvetica", 12)
+    p.drawString(150, height - 70, "123, ABC Road, City, Country - 567890")
+    p.drawString(150, height - 90, "Email: info@xyzinstitute.com | Phone: +91-1234567890")
+    
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(220, height - 130, title)
+    p.line(50, height - 140, width - 50, height - 140)
+
+def download_invoice(request, admission_form_id):
     admission_form = get_object_or_404(AdmissionForm, id=admission_form_id)
     payment = get_object_or_404(Payment, admission_form=admission_form)
 
@@ -32,30 +70,29 @@ def download_invoice(request, admission_form_id):  # Accept admission_form_id as
 
     p = canvas.Canvas(response, pagesize=A4)
     width, height = A4
-
-    # Header
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(200, height - 50, "XYZ Institute of Technology")
-    p.setFont("Helvetica", 12)
-    p.drawString(200, height - 70, "123, ABC Road, City, Country - 567890")
-    p.drawString(200, height - 90, "Email: info@xyzinstitute.com | Phone: +91-1234567890")
-
-    p.line(50, height - 100, width - 50, height - 100)
-
-    # Invoice Title
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(250, height - 130, "Fee Payment Invoice")
-
-    # Invoice Details
-    p.setFont("Helvetica", 12)
-    p.drawString(50, height - 160, f"Invoice No: INV-{payment.id}")
-    p.drawString(50, height - 180, f"Student Name: {admission_form.name}")
-    p.drawString(50, height - 200, f"Course: {admission_form.course_preferred.name}")
-    p.drawString(50, height - 200, f"Transaction ID: {payment.transaction_id}")
-    p.drawString(50, height - 220, f"Payment Date: {payment.date.strftime('%d-%m-%Y')}")
-    p.drawString(50, height - 240, f"Payment Method: {payment.get_payment_mode_display()}")
-    p.drawString(50, height - 260, f"Amount Paid: Rs. {payment.amount}")
-
+    draw_header(p, width, height, "Fee Payment Invoice")
+    
+    # Invoice Table
+    data = [
+        ["Invoice No:", f"INV-{payment.id}"],
+        ["Student Name:", admission_form.name],
+        ["Course:", admission_form.course_preferred.name],
+        ["Transaction ID:", payment.transaction_id],
+        ["Payment Date:", payment.date.strftime('%d-%m-%Y')],
+        ["Payment Method:", payment.get_payment_mode_display()],
+        ["Amount Paid:", f"₹ {payment.amount:,.2f}"],
+    ]
+    
+    table = Table(data, colWidths=[200, 250])
+    table.setStyle(TableStyle([
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+    ]))
+    table.wrapOn(p, width, height)
+    table.drawOn(p, 50, height - 250)
+    
     # Footer
     p.line(50, 100, width - 50, 100)
     p.drawString(50, 80, "Authorized Signatory")
@@ -64,8 +101,6 @@ def download_invoice(request, admission_form_id):  # Accept admission_form_id as
     p.showPage()
     p.save()
     return response
-
-
 
 def download_allotment_letter(request):
     admission_form_id = request.GET.get('admission_form_id')
@@ -79,19 +114,7 @@ def download_allotment_letter(request):
 
     p = canvas.Canvas(response, pagesize=A4)
     width, height = A4
-
-    # Header
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(150, height - 50, "XYZ Institute of Technology")
-    p.setFont("Helvetica", 12)
-    p.drawString(150, height - 70, "123, ABC Road, City, Country - 567890")
-    p.drawString(150, height - 90, "Email: info@xyzinstitute.com | Phone: +91-1234567890")
-
-    p.line(50, height - 100, width - 50, height - 100)
-
-    # Title
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(220, height - 130, "Admission Allotment Letter")
+    draw_header(p, width, height, "Admission Allotment Letter")
 
     # Student Details Table
     data = [
@@ -100,26 +123,26 @@ def download_allotment_letter(request):
         ["Phone Number:", admission_form.phone_number],
         ["Aadhar Number:", admission_form.aadhar_number],
         ["Last Qualification:", admission_form.last_qualification],
-        ["Course Opted:", admission_form.course_preferred],  # Replace if available
+        ["Course Opted:", admission_form.course_preferred],
     ]
-
+    
     table = Table(data, colWidths=[200, 250])
     table.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
     ]))
-
     table.wrapOn(p, width, height)
     table.drawOn(p, 50, height - 300)
-
+    
     # Add Images if available
-    y_position = height - 370  # Adjust based on table position
-
+    y_position = height - 370
     if admission_form.passport_photo:
         passport_path = os.path.join(settings.MEDIA_ROOT, str(admission_form.passport_photo))
         if os.path.exists(passport_path):
             p.drawString(50, y_position, "Passport Photo:")
             p.drawImage(ImageReader(passport_path), 50, y_position - 70, width=100, height=100)
-            y_position -= 120  # Move down for next content
+            y_position -= 120
 
     if admission_form.signature:
         signature_path = os.path.join(settings.MEDIA_ROOT, str(admission_form.signature))
@@ -135,6 +158,7 @@ def download_allotment_letter(request):
     p.showPage()
     p.save()
     return response
+
 
 
 def assign_counsellor():
